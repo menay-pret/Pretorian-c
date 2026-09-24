@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Praetorian Sentinel Smart — Intelligence réglementaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16242E;
+  --ink-soft:#3E515C;
+  --ink-faint:#6F818B;
+  --paper:#EDEBE4;
+  --paper-raised:#F6F5F0;
+  --paper-sunk:#E3E0D6;
+  --rule:#CFCBBF;
+  --rule-strong:#AEA893;
+  --brass:#9A7233;
+  --brass-wash:#EFE6D2;
+  --verified:#3A6B4D;
+  --transitional:#B3701F;
+  --missing:#9B3B2E;
+  --official:#2F3B42;
+  --serif:'Spectral',Georgia,'Times New Roman',serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0}
+p{margin:0}
+button,select,input{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+/* ---------- header ---------- */
+.masthead{
+  border-bottom:1px solid var(--rule);
+  background:var(--paper-raised);
+  position:sticky;top:0;z-index:20;
+}
+.masthead-in{
+  max-width:1180px;margin:0 auto;padding:14px 22px;
+  display:flex;align-items:center;gap:14px;
+}
+.sigil{
+  width:34px;height:34px;flex:none;border:1px solid var(--brass);
+  display:grid;place-items:center;background:var(--brass-wash);
+}
+.sigil svg{width:18px;height:18px}
+.wordmark{font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:.01em}
+.wordmark span{display:block;font-family:var(--sans);font-size:11px;font-weight:400;color:var(--ink-faint);letter-spacing:.02em}
+.langs{margin-left:auto;display:flex;gap:2px}
+.langs button{
+  background:none;border:1px solid transparent;padding:4px 9px;font-size:12px;
+  color:var(--ink-faint);cursor:pointer;
+}
+.langs button[aria-pressed="true"]{border-color:var(--rule-strong);color:var(--ink);background:var(--paper)}
+
+/* ---------- shell ---------- */
+.shell{max-width:1180px;margin:0 auto;padding:0 22px 70px;display:grid;grid-template-columns:264px 1fr;gap:38px}
+@media(max-width:880px){.shell{grid-template-columns:1fr;gap:0;padding-bottom:40px}}
+
+/* ---------- depth rail ---------- */
+.rail{padding:30px 0 0}
+.rail-lede{font-size:12.5px;color:var(--ink-faint);margin-bottom:16px;max-width:30ch}
+.strata{position:relative;list-style:none;margin:0;padding:0}
+.strata::before{
+  content:"";position:absolute;left:13px;top:12px;bottom:44px;width:1px;background:var(--rule-strong);
+}
+.stratum{position:relative;padding-left:34px;margin-bottom:2px}
+.stratum button{
+  width:100%;text-align:left;background:none;border:none;cursor:pointer;
+  padding:8px 10px;display:block;border:1px solid transparent;
+}
+.stratum button:hover{background:var(--paper-raised)}
+.stratum[data-on="1"] button{background:var(--paper-raised);border-color:var(--rule)}
+.dot{
+  position:absolute;left:8px;top:15px;width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:1px solid var(--rule-strong);
+}
+.stratum[data-on="1"] .dot{background:var(--brass);border-color:var(--brass)}
+.s-name{font-size:14px;font-weight:500;display:block}
+.s-logic{font-size:11.5px;color:var(--ink-faint);display:block}
+.depthbar{height:3px;background:var(--paper-sunk);margin-top:6px}
+.depthbar i{display:block;height:100%;background:var(--rule-strong)}
+.stratum[data-on="1"] .depthbar i{background:var(--brass)}
+.socle{
+  margin-left:34px;margin-top:14px;border:1px solid var(--rule-strong);
+  background:var(--paper-sunk);padding:10px 12px;
+}
+.s-price{font-family:var(--serif);font-size:12.5px;color:var(--brass);display:block;margin-top:1px}
+.p-price{
+  display:inline-block;font-family:var(--serif);font-size:15px;color:var(--brass);
+  border:1px solid var(--brass);background:var(--brass-wash);padding:3px 11px;margin-top:11px;
+}
+.socle b{font-size:13px;font-weight:600;display:block}
+.socle span{font-size:11.5px;color:var(--ink-soft)}
+
+/* ---------- panel ---------- */
+.panel{padding:30px 0 0;min-width:0}
+.panel-head{border-bottom:1px solid var(--rule);padding-bottom:16px;margin-bottom:22px}
+.panel-head h1{font-size:30px;letter-spacing:-.01em}
+.panel-head .logic{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--brass);margin-top:2px}
+.panel-head .deliv{font-size:13px;color:var(--ink-soft);margin-top:9px;max-width:62ch}
+.view{display:none}
+.view[data-on="1"]{display:block}
+
+.fieldlabel{display:block;font-size:12.5px;color:var(--ink-soft);margin-bottom:5px}
+select,input[type=text]{
+  width:100%;padding:9px 10px;background:var(--paper-raised);
+  border:1px solid var(--rule-strong);border-radius:0;
+}
+.act{
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+  padding:10px 16px;cursor:pointer;font-size:14px;font-weight:500;
+}
+.act:hover{background:#0D1920}
+.act.ghost{background:none;color:var(--ink);border-color:var(--rule-strong)}
+.act.ghost:hover{background:var(--paper-raised)}
+.act.full{width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.err{color:var(--missing);font-size:13px;margin-top:9px;display:none}
+.err[data-on="1"]{display:block}
+
+.checks{margin:0;padding:0;list-style:none;border-top:1px solid var(--rule)}
+.checks li{border-bottom:1px solid var(--rule)}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:9px 2px;cursor:pointer;font-size:14px}
+.checks input{margin-top:3px;flex:none;accent-color:var(--brass)}
+
+/* branching */
+.branch{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.branch button{
+  text-align:left;background:var(--paper-raised);border:1px solid var(--rule-strong);
+  padding:11px 13px;cursor:pointer;font-size:14px;
+}
+.branch button:hover{border-color:var(--brass);background:var(--brass-wash)}
+.trail{font-size:12px;color:var(--ink-faint);min-height:17px;margin-bottom:12px}
+.qtext{font-family:var(--serif);font-size:19px;margin-bottom:14px}
+
+/* deliverable block */
+.deliverable{border:1px solid var(--rule-strong);background:var(--paper-raised);margin-top:24px;display:none}
+.deliverable[data-on="1"]{display:block}
+.deliv-top{
+  display:flex;align-items:center;gap:10px;padding:11px 15px;
+  border-bottom:1px solid var(--rule);background:var(--paper-sunk);
+}
+.deliv-top b{font-size:12.5px;font-weight:600;flex:1}
+.deliv-body{padding:15px}
+.seg{padding-bottom:13px;margin-bottom:13px;border-bottom:1px solid var(--rule)}
+.seg:last-child{border:none;padding-bottom:0;margin-bottom:0}
+.seg h4{margin:0 0 4px;font-family:var(--sans);font-size:12.5px;font-weight:600}
+.seg p{font-size:14px;color:var(--ink-soft)}
+.nextstep{background:var(--brass-wash);border:1px solid var(--brass);padding:11px 13px;font-size:13.5px;margin-top:14px}
+.axis{border-left:2px solid var(--brass);padding-left:13px;margin:16px 0}
+.axis h5{font-family:var(--serif);font-size:16px;font-weight:600;margin:0 0 7px}
+.axis .sub{font-size:12px;font-weight:600;color:var(--ink);margin:9px 0 3px}
+.axis p{font-size:13.5px;color:var(--ink-soft)}
+.axis ul{margin:3px 0 0;padding-left:17px;font-size:13.5px;color:var(--ink-soft)}
+.axis li{margin-bottom:2px}
+.circuit{
+  font-size:12.5px;color:var(--ink);background:var(--paper-sunk);
+  border:1px solid var(--rule);padding:9px 11px;margin-top:4px;line-height:1.7;
+}
+.circuit b{font-weight:500}
+
+/* files */
+.dropzone{border:1px dashed var(--rule-strong);padding:22px;text-align:center;color:var(--ink-faint);font-size:13.5px}
+.filelist{margin:12px 0 0;padding:0;list-style:none}
+.filelist li{display:flex;gap:10px;align-items:center;border:1px solid var(--rule);background:var(--paper-raised);padding:8px 11px;margin-bottom:6px;font-size:13.5px}
+.filelist button{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--ink-faint);font-size:16px;line-height:1;padding:0 3px}
+
+/* chain */
+.chain{margin:0;padding:0;list-style:none;counter-reset:step}
+.chain li{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--rule)}
+.chain .num{
+  width:23px;height:23px;flex:none;border:1px solid var(--brass);color:var(--brass);
+  display:grid;place-items:center;font-size:12px;font-weight:600;
+}
+.chain .lab{font-size:14px;font-weight:500}
+.chain .sub{font-size:12px;color:var(--ink-faint)}
+.chain .tag{margin-left:auto;font-size:11px;color:var(--ink-soft);border:1px solid var(--rule);padding:1px 7px;height:fit-content;white-space:nowrap}
+
+/* kpi */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{border:1px solid var(--rule);background:var(--paper-raised);padding:11px 12px}
+.kpi .k{font-size:11px;color:var(--ink-faint)}
+.kpi .v{font-family:var(--serif);font-size:25px;font-weight:600;line-height:1.1;margin-top:2px}
+.kpi .n{font-size:11px;color:var(--ink-soft);margin-top:3px}
+
+/* milestones */
+.miles{margin:0;padding:0;list-style:none;border-top:1px solid var(--rule)}
+.miles li{border-bottom:1px solid var(--rule);padding:11px 0;display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center}
+.miles .lab{font-size:14px;font-weight:500}
+.miles .inst{font-size:11.5px;color:var(--ink-faint)}
+.miles select{width:auto;min-width:135px;padding:5px 8px;font-size:13px}
+.crit{color:var(--brass);font-weight:500}
+.st{font-size:11.5px;padding:1px 8px;border:1px solid var(--rule-strong);white-space:nowrap}
+.st[data-v="Terminé"]{color:var(--verified);border-color:var(--verified)}
+.st[data-v="Bloqué"]{color:var(--missing);border-color:var(--missing)}
+.st[data-v="En cours"]{color:var(--transitional);border-color:var(--transitional)}
+
+/* tools */
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:640px){.tools{grid-template-columns:repeat(2,1fr)}}
+.tool{border:1px solid var(--rule);background:var(--paper-raised);padding:13px 11px;text-align:center;font-size:12.5px}
+.tool em{display:block;font-style:normal;font-size:11px;color:var(--ink-faint);margin-top:3px}
+
+/* actors */
+.actors{margin:0;padding:0;list-style:none}
+.actors li{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:center;padding:9px 0;border-bottom:1px solid var(--rule)}
+.pip{width:8px;height:8px;border-radius:50%;background:var(--brass)}
+.actors .who{font-size:14px;font-weight:500}
+.actors .link{font-size:11.5px;color:var(--ink-faint)}
+.actors .doc{font-size:11.5px;color:var(--ink-soft);border:1px solid var(--rule);padding:1px 7px;white-space:nowrap}
+
+.sectitle{font-family:var(--serif);font-size:19px;margin:26px 0 10px}
+.note{font-size:12.5px;color:var(--ink-faint);margin-top:10px;max-width:64ch}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11.5px;color:var(--ink-soft);margin-top:12px}
+.legend i{font-style:normal;display:inline-block;width:8px;height:8px;margin-right:5px}
+footer{border-top:1px solid var(--rule);margin-top:50px;padding-top:16px;font-size:12px;color:var(--ink-faint);max-width:1180px;margin-left:auto;margin-right:auto;padding-left:22px;padding-right:22px}
+
+/* ---------- assistant ---------- */
+.assist{border:1px solid var(--rule-strong);background:var(--paper-raised);margin-top:34px}
+.assist-top{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--rule);background:var(--ink)}
+.assist-top b{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--paper);flex:1}
+.assist-top .sc{font-size:11px;color:var(--rule)}
+.assist-body{padding:15px}
+.assist-lede{font-size:12.5px;color:var(--ink-faint);margin-bottom:11px}
+.qlist{display:flex;flex-direction:column;gap:7px}
+.qlist button{
+  text-align:left;background:var(--paper);border:1px solid var(--rule);
+  padding:10px 12px;cursor:pointer;font-size:13.5px;
+}
+.qlist button:hover{border-color:var(--brass);background:var(--brass-wash)}
+.qlist button::before{content:"? ";color:var(--brass);font-weight:600}
+.answer{border-top:1px solid var(--rule);margin-top:15px;padding-top:14px;display:none}
+.answer[data-on="1"]{display:block}
+.answer h5{font-family:var(--serif);font-size:16px;font-weight:600;margin:0 0 11px}
+.afield{margin-bottom:11px}
+.afield .k{font-size:11.5px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.afield .t{font-size:13.5px;color:var(--ink-soft)}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border:1px solid;margin-right:5px;vertical-align:1px}
+.b-ok{color:var(--verified);border-color:var(--verified)}
+.b-tr{color:var(--transitional);border-color:var(--transitional)}
+.b-no{color:var(--missing);border-color:var(--missing)}
+.askbox{display:flex;gap:8px;margin-top:14px}
+.askbox input{flex:1}
+.askmsg{font-size:12.5px;color:var(--ink-faint);margin-top:9px;display:none}
+.askmsg[data-on="1"]{display:block}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <span class="sigil" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9A7233" stroke-width="1.6"><path d="M12 2.5 4 6v6.5c0 5 3.4 8.1 8 9.5 4.6-1.4 8-4.5 8-9.5V6z"/><path d="M12 8.5v7"/></svg>
+    </span>
+    <span class="wordmark">Praetorian Sentinel Smart
+      <span>Intelligence réglementaire, contractuelle et de pilotage — Algérie</span>
+    </span>
+    <nav class="langs" aria-label="Langue">
+      <button aria-pressed="true">FR</button>
+      <button aria-pressed="false">EN</button>
+      <button aria-pressed="false">AR</button>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+
+  <nav class="rail" aria-label="Paliers">
+    <p class="rail-lede">Un socle documentaire unique, interrogé à des profondeurs croissantes.</p>
+    <ul class="strata" id="strata"></ul>
+    <div class="socle">
+      <b>Socle commun</b>
+      <span>21 axes réglementaires, institutions, documents et procédures — écrits une seule fois.</span>
+    </div>
+  </nav>
+
+  <main class="panel">
+    <div class="panel-head">
+      <h1 id="pTitle">Free</h1>
+      <p class="logic" id="pLogic">Je m'oriente</p>
+      <p class="deliv" id="pDeliv"></p>
+      <p class="p-price" id="pPrice"></p>
+    </div>
+
+    <!-- ================= FREE ================= -->
+    <section class="view" data-view="free" data-on="1">
+      <label class="fieldlabel" for="profil">Vous êtes</label>
+      <select id="profil">
+        <option value="">Choisir un profil</option>
+        <optgroup label="Porteur de projet">
+          <option value="promoteur">Promoteur immobilier</option>
+          <option value="industriel">Industriel</option>
+          <option value="investNat">Investisseur national ou étranger, en partenariat</option>
+          <option value="entrepriseDev">Entreprise installée, en litige ou en développement</option>
+          <option value="betMarches">Bureau d'études répondant à un marché public</option>
+          <option value="importateur">Importateur ou société de négoce</option>
+          <option value="entrepreneur">Entrepreneur en création</option>
+          <option value="diaspora">Algérien de la diaspora</option>
+          <option value="holding">Family office ou holding</option>
+        </optgroup>
+        <optgroup label="Professionnel intermédiaire">
+          <option value="avocat">Avocat</option>
+          <option value="expertComptable">Expert-comptable</option>
+          <option value="notaire">Notaire</option>
+          <option value="conseilFDI">Conseil en implantation internationale</option>
+          <option value="courtier">Courtier assurance ou financement</option>
+          <option value="betConseil">Architecte ou bureau d'études (conseil)</option>
+        </optgroup>
+        <optgroup label="Partenaire institutionnel">
+          <option value="cci">Chambre de commerce</option>
+          <option value="banque">Banque</option>
+          <option value="agenceDev">Agence de développement</option>
+        </optgroup>
+        <optgroup label="Partenaire international">
+          <option value="societeEtrangere">Société étrangère investissant en Algérie</option>
+          <option value="consultantEtranger">Consultant étranger</option>
+        </optgroup>
+      </select>
+
+      <div id="needsWrap" style="display:none;margin-top:20px">
+        <p class="fieldlabel">Vos besoins — cochez ce qui s'applique</p>
+        <ul class="checks" id="needs"></ul>
+      </div>
+
+      <div class="row" style="margin-top:18px"><button class="act full" id="freeGo">Générer le rapport d'orientation</button></div>
+      <p class="err" id="freeErr">Choisissez un profil, puis au moins un besoin.</p>
+
+      <div class="deliverable" id="freeOut">
+        <div class="deliv-top"><b>Rapport d'orientation</b><button class="act ghost" data-dl="freeOut" data-name="Rapport-orientation-Free">Télécharger</button></div>
+        <div class="deliv-body" id="freeBody"></div>
+      </div>
+    </section>
+
+    <!-- ================= PALIERS RÉSERVÉS ================= -->
+    <section class="view" data-view="locked">
+      <div class="deliverable" data-on="1" style="margin-top:0">
+        <div class="deliv-top"><b id="lockHead">Accès réservé</b></div>
+        <div class="deliv-body">
+          <div class="seg"><h4>Ce que comprend ce palier</h4><p id="lockDeliv"></p></div>
+          <div class="seg"><h4>Comment y accéder</h4><p>Les outils, analyses et livrables de ce palier ne sont pas accessibles en ligne. Ils vous sont ouverts après un premier échange, selon votre projet.</p></div>
+          <div class="row" style="margin-top:14px">
+            <a class="act" href="https://wa.me/213555372345" target="_blank" rel="noopener" style="text-decoration:none">Nous écrire sur WhatsApp</a>
+            <a class="act ghost" href="mailto:men-ay_pro-managment@outlook.fr" style="text-decoration:none">Par courriel</a>
+          </div>
+          <p class="note">WhatsApp +213 555 37 23 45 · men-ay_pro-managment@outlook.fr</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ASSISTANT ================= -->
+    <section class="assist">
+      <div class="assist-top">
+        <b>Assistant</b>
+        <span class="sc" id="assistScope">Palier Free</span>
+      </div>
+      <div class="assist-body">
+        <p class="assist-lede">Questions proposées pour ce palier. Chaque réponse distingue le fait, le texte, le risque et l'action, et porte le statut de fiabilité de sa source.</p>
+        <div class="qlist" id="qlist"></div>
+
+        <div class="answer" id="answer">
+          <h5 id="aQ"></h5>
+          <div class="afield"><p class="k">Ce que dit le cadre</p><p class="t" id="aF"></p></div>
+          <div class="afield"><p class="k">Textes et statut</p><p class="t" id="aT"></p></div>
+          <div class="afield"><p class="k">Risque à surveiller</p><p class="t" id="aR"></p></div>
+          <div class="afield"><p class="k">Action logique</p><p class="t" id="aA"></p></div>
+          <div class="row"><button class="act ghost" data-dl="answer" data-name="Reponse-assistant">Télécharger la réponse</button></div>
+        </div>
+
+        <div class="askbox">
+          <input type="text" id="askIn" placeholder="Poser une autre question…" aria-label="Poser une autre question">
+          <button class="act" id="askGo">Envoyer</button>
+        </div>
+        <p class="askmsg" id="askMsg">Les questions libres nécessitent le moteur connecté à la base documentaire. Dans cette maquette, seules les questions proposées ci-dessus sont traitées.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  Maquette fonctionnelle. Les contenus réglementaires affichés sont des exemples de structure : chaque référence devra être vérifiée sur source officielle avant mise en production.
+</footer>
+
+<script>
+/* ============ paliers ============ */
+const PALIERS=[
+ {id:'free',name:'Free',logic:"Je m'oriente",depth:16,price:'Gratuit',
+  deliv:"Rapport d'orientation : profil qualifié, domaines réglementaires concernés, premières orientations et documents probablement nécessaires."},
+ {id:'essential',name:'Essential',logic:'Je diagnostique',depth:33,price:'Accès réservé · sur demande',
+  deliv:"Diagnostic guidé : obligations, risques et points bloquants d'un axe, avec les références légales applicables."},
+ {id:'pro',name:'Pro',logic:"J'analyse mon dossier",depth:50,price:'Accès réservé · sur demande',
+  deliv:"Analyse documentaire : pièces confrontées à la réglementation, incohérences et lacunes, documents complémentaires à fournir."},
+ {id:'project',name:'Project',logic:'Je construis mon montage',depth:66,price:'Accès réservé · sur demande',
+  deliv:"Dossier de montage multidisciplinaire : architecture juridique, foncière, financière et administrative, avec cheminement de réalisation."},
+ {id:'dmo',name:'Dmo',logic:'Je pilote mon projet',depth:83,price:'Accès réservé · sur demande',
+  deliv:"Dossier personnalisé et évolutif : le montage renseigné avec les données réelles du projet, en outil de pilotage et de suivi décisionnel."},
+ {id:'entreprise',name:'Entreprise Dmo',logic:'Je déploie de A à Z',depth:100,price:'Accès réservé · sur demande',
+  deliv:"Schéma directeur complet : plusieurs projets pilotés ensemble, interactions entre institutions et acteurs, flux documentaires et points de contrôle."}
+];
+
+const strata=document.getElementById('strata');
+strata.innerHTML=PALIERS.map((p,i)=>
+ `<li class="stratum" data-p="${p.id}" data-on="${i===0?1:0}">
+    <span class="dot"></span>
+    <button type="button">
+      <span class="s-name">${p.name}</span>
+      <span class="s-logic">${p.logic}</span>
+      <span class="s-price">${p.price}</span>
+      <span class="depthbar"><i style="width:${p.depth}%"></i></span>
+    </button>
+  </li>`).join('');
+
+function show(id){
+  PALIERS.forEach(p=>{
+    document.querySelector(`.stratum[data-p="${p.id}"]`).dataset.on = p.id===id?1:0;
+  });
+  const vid = id==='free' ? 'free' : 'locked';
+  document.querySelectorAll('.view').forEach(v=>{ v.dataset.on = v.dataset.view===vid?1:0; });
+  const p=PALIERS.find(x=>x.id===id);
+  if(vid==='locked'){
+    document.getElementById('lockHead').textContent='Palier '+p.name+' — accès réservé';
+    document.getElementById('lockDeliv').textContent=p.deliv;
+  }
+  document.getElementById('pTitle').textContent=p.name;
+  document.getElementById('pLogic').textContent=p.logic;
+  document.getElementById('pDeliv').textContent=p.deliv;
+  document.getElementById('pPrice').textContent=p.price;
+  if(typeof renderAssist==='function') renderAssist(id);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+strata.addEventListener('click',e=>{
+  const li=e.target.closest('.stratum'); if(li) show(li.dataset.p);
+});
+document.getElementById('pDeliv').textContent=PALIERS[0].deliv;
+document.getElementById('pPrice').textContent=PALIERS[0].price;
+
+/* ============ téléchargement ============ */
+function grab(el){return el.innerText.replace(/\nTélécharger\n/g,'\n').trim();}
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-dl]'); if(!b) return;
+  const src=document.getElementById(b.dataset.dl);
+  const head='PRAETORIAN SENTINEL SMART\n'+b.dataset.name.replace(/-/g,' ')+'\n'+new Date().toLocaleDateString('fr-FR')+'\n'+'='.repeat(46)+'\n\n';
+  const foot='\n\n'+'='.repeat(46)+'\nContact : WhatsApp +213 555 37 23 45 · men-ay_pro-managment@outlook.fr';
+  const blob=new Blob([head+grab(src)+foot],{type:'text/plain;charset=utf-8'});
+  const filename=b.dataset.name+'.txt';
+  try{
+    const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+    if(dl){ await dl.save({filename, data:blob}); return; }
+  }catch(err){ if(err && err.code==='declined') return; }
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+});
+
+/* ============ FREE ============ */
+const NEEDS={
+ promoteur:[['Éligibilité aux avantages','AAPI et investissement'],['Recherche de foncier ou concession','Foncier économique'],['Permis et conformité','Urbanisme et construction'],['Crédit promotion immobilière','Crédit et financement'],['Fiscalité de la promotion','Fiscalité'],['Maîtrise d\u2019ouvrage publique','Marchés publics'],['Contrats de réalisation, VEFA','Gestion contractuelle'],['Dommages ouvrage, décennale','Assurance et risques'],['Structure de portage','Création et vie de l\u2019entreprise']],
+ industriel:[['Enregistrement AAPI','AAPI et investissement'],['Création, extension, modernisation','Industrie et implantation'],['Foncier industriel','Foncier économique'],['Importation d\u2019équipements','Commerce extérieur'],['Fournisseurs ou financement étrangers','Change et transferts'],['Financement du projet','Crédit et financement'],['Installations classées','HSE'],['Recrutement, main-d\u2019œuvre','Travail et ressources humaines'],['Avantages fiscaux','Fiscalité']],
+ investNat:[['Enregistrement AAPI','AAPI et investissement'],['Entrée en Algérie si étranger','International Investor Gateway'],['Structuration juridique','Création et vie de l\u2019entreprise'],['Financement','Crédit et financement'],['Fiscalité et avantages','Fiscalité'],['Capitaux étrangers','Change et transferts'],['Pacte d\u2019associés','Gestion contractuelle']],
+ entrepriseDev:[['Litige ou différend','Contentieux et litiges'],['Révision de contrats','Gestion contractuelle'],['Contrôle ou contentieux fiscal','Fiscalité'],['Ressources humaines','Travail et ressources humaines'],['Sinistres','Assurance et risques'],['Soumissions régulières','Marchés publics'],['Incident sécurité','HSE']],
+ betMarches:[['Réponse à un marché','Marchés publics'],['Contrats de maîtrise d\u2019œuvre','Gestion contractuelle'],['Conformité technique','Urbanisme et construction'],['Réserves et réception','Contentieux et litiges'],['Responsabilité technique','HSE']],
+ importateur:[['Régime et classification douanière','Commerce extérieur'],['Paiement fournisseur','Change et transferts'],['Crédit documentaire','Banque'],['Fiscalité des importations','Fiscalité'],['Structure de la société','Création et vie de l\u2019entreprise']],
+ entrepreneur:[['Choix de la forme juridique','Création et vie de l\u2019entreprise'],['Investissement associé','AAPI et investissement'],['Fiscalité de départ','Fiscalité'],['Compte professionnel','Banque']],
+ diaspora:[['Transfert de fonds','Change et transferts'],['Achat immobilier ou foncier','Foncier économique'],['Création d\u2019une structure','Création et vie de l\u2019entreprise'],['Projet d\u2019investissement','AAPI et investissement'],['Statut résident ou non-résident','Fiscalité']],
+ holding:[['Structuration multi-projets','International Investor Gateway'],['Pilotage de plusieurs entités','Création et vie de l\u2019entreprise'],['Financement consolidé','Crédit et financement'],['Optimisation consolidée','Fiscalité'],['Groupement et gouvernance','Gestion contractuelle'],['Risques du groupe','Assurance et risques']],
+ avocat:[['Dossier de contentieux','Contentieux et litiges'],['Conformité contractuelle','Gestion contractuelle'],['Recherche documentaire','Base documentaire juridique'],['Client soumissionnaire','Marchés publics'],['Dossier factuel avant plaidoirie','Génération documentaire']],
+ expertComptable:[['Fiscalité d\u2019un client','Fiscalité'],['Constitution de société','Création et vie de l\u2019entreprise'],['Montage d\u2019un dossier de crédit','Crédit et financement'],['Avantages AAPI','AAPI et investissement']],
+ notaire:[['Statuts et cessions de parts','Création et vie de l\u2019entreprise'],['Actes fonciers','Foncier économique'],['Contrats entre parties','Gestion contractuelle']],
+ conseilFDI:[['Accompagnement d\u2019un investisseur','International Investor Gateway'],['Enregistrement AAPI du client','AAPI et investissement'],['Structuration multi-clients','Création et vie de l\u2019entreprise'],['Transferts de capitaux','Change et transferts']],
+ courtier:[['Dossier d\u2019assurance','Assurance et risques'],['Dossier de financement','Crédit et financement'],['Relation bancaire du client','Banque']],
+ betConseil:[['Permis de construire','Urbanisme et construction'],['Réponse à un marché','Marchés publics'],['Contrats de maîtrise d\u2019œuvre','Gestion contractuelle'],['Responsabilité de chantier','HSE']],
+ cci:[['Orientation des adhérents','International Investor Gateway'],['Information générale','Base documentaire juridique']],
+ banque:[['Pré-qualification d\u2019un crédit','Crédit et financement'],['Éligibilité AAPI du dossier','AAPI et investissement'],['Conformité des transferts','Change et transferts'],['Situation fiscale','Fiscalité']],
+ agenceDev:[['Orientation d\u2019investisseurs','AAPI et investissement'],['Disponibilité foncière','Foncier économique'],['Projets industriels','Industrie et implantation']],
+ societeEtrangere:[['Comprendre le cadre réglementaire','International Investor Gateway'],['Trouver un partenaire algérien','International Investor Gateway'],['Structurer l\u2019entrée de capital','Change et transferts'],['Importer des équipements','Commerce extérieur'],['Filiale, succursale ou joint-venture','Création et vie de l\u2019entreprise'],['Contractualiser le partenariat','Gestion contractuelle']],
+ consultantEtranger:[['Accompagner un client','International Investor Gateway'],['Vérification de sources','Base documentaire juridique']]
+};
+const profilSel=document.getElementById('profil');
+profilSel.addEventListener('change',()=>{
+  const v=profilSel.value, w=document.getElementById('needsWrap');
+  document.getElementById('freeOut').dataset.on=0;
+  if(!v){w.style.display='none';return;}
+  document.getElementById('needs').innerHTML=(NEEDS[v]||[]).map(n=>
+    `<li><label><input type="checkbox" value="${n[1]}"><span>${n[0]}</span></label></li>`).join('');
+  w.style.display='block';
+});
+/* Notices de fond par axe — contenu générique, sans analyse du dossier de l'utilisateur */
+const AXES={
+ 'Contentieux et litiges':{
+  comp:["Le contrat lui-même : acte d'engagement, conditions particulières, prix et délais.",
+        "Le CCAG (cahier des clauses administratives générales) : règles de droit commun applicables au marché — ordres de service, délais, pénalités, réception, résiliation.",
+        "Le CCTP (cahier des clauses techniques particulières) : spécifications techniques, normes, prescriptions d'exécution propres à l'ouvrage.",
+        "Les pièces d'exécution : ordres de service, comptes rendus, correspondances, attachements, procès-verbaux.",
+        "Les pièces financières : situations, décomptes, retenues de garantie, cautions."],
+  cas:["Retard d'exécution : imputable au titulaire (pénalités) ou au maître d'ouvrage (prolongation de délai, préjudice).",
+       "Ordres de service non émis, tardifs ou contradictoires.",
+       "Travaux supplémentaires exécutés sans avenant.",
+       "Non-conformité aux clauses techniques du CCTP.",
+       "Réception avec réserves non levées, ou refus de réception.",
+       "Non-paiement ou retard de paiement des situations.",
+       "Résiliation unilatérale et son indemnisation.",
+       "Désordres apparus après réception, relevant des garanties.",
+       "Accident ou incident sur site, engageant les responsabilités civile, administrative et pénale simultanément."],
+  circ:"FAIT → <b>chronologie</b> → obligation prévue au contrat → obligation réellement exécutée → <b>écart</b> → partie responsable → préjudice → <b>preuves</b> → fondement de la réclamation → mise en demeure → recours amiable, expertise ou juridiction",
+  piece:"Contrat et ses annexes, CCAG, CCTP, ordres de service, correspondances datées, procès-verbaux, situations et décomptes, constats, rapports d'expertise."},
+ 'Gestion contractuelle':{
+  comp:["Obligations de chaque partie, telles qu'écrites et telles qu'exécutées.",
+        "Chronologie des événements et de leurs preuves.",
+        "Clauses de prix, de révision, de délai et de pénalité.",
+        "Clauses de résiliation, de règlement des différends et de droit applicable."],
+  cas:["Clause manquante ou ambiguë découverte en cours d'exécution.",
+       "Obligation exécutée sans trace écrite mobilisable.",
+       "Avenant nécessaire mais non formalisé.",
+       "Contradiction entre pièces contractuelles de rang différent."],
+  circ:"CONTRAT → obligations → chronologie → <b>preuves</b> → écart → responsabilité → préjudice → réclamation ou négociation",
+  piece:"Contrat signé et annexes, avenants, correspondances, procès-verbaux, preuves d'exécution."},
+ 'AAPI et investissement':{
+  comp:["Le régime applicable selon le montant et la nature du projet.",
+        "L'attestation d'enregistrement, délivrée par le guichet unique.",
+        "La liste des biens et services éligibles aux avantages.",
+        "Les obligations de l'investisseur pendant et après la réalisation."],
+  cas:["Éligibilité au régime des investissements structurants ou au régime général.",
+       "Biens importés absents de la liste visée, faisant perdre l'avantage.",
+       "Délai de réalisation non respecté.",
+       "Objet social incompatible avec le projet déclaré."],
+  circ:"PROJET → régime applicable → <b>guichet unique</b> → attestation d'enregistrement → liste des biens éligibles → réalisation → procès-verbal d'entrée en exploitation → durée des avantages",
+  piece:"Statuts, justificatif de capital, description du projet, liste des équipements, attestation d'enregistrement."},
+ 'Foncier économique':{
+  comp:["Le régime juridique du terrain : domaine privé de l'État, concession, propriété privée.",
+        "La destination : zone industrielle, zone d'activités, parc technologique.",
+        "Le cahier des charges attaché à la concession.",
+        "Les obligations de réalisation et de mise en valeur."],
+  cas:["Terrain disponible mais non viabilisé.",
+       "Changement d'affectation nécessaire.",
+       "Non-respect des obligations de réalisation entraînant un retrait.",
+       "Concurrence entre demandeurs sur la même assiette."],
+  circ:"PROJET → recherche du terrain → éligibilité → demande → <b>évaluation</b> → attribution → acte de concession → cahier des charges → réalisation → mise en exploitation",
+  piece:"Demande, dossier de projet, plan de masse, acte de concession, cahier des charges."},
+ 'Urbanisme et construction':{
+  comp:["Le certificat d'urbanisme et les règles du plan applicable.",
+        "Le permis de construire ou de lotir, et ses modificatifs.",
+        "Le certificat de conformité et l'achèvement des travaux.",
+        "Les normes techniques de construction applicables."],
+  cas:["Projet non conforme aux prescriptions du plan.",
+       "Travaux entamés avant obtention du permis.",
+       "Modification en cours de chantier sans permis modificatif.",
+       "Refus de conformité en fin de chantier."],
+  circ:"TERRAIN → certificat d'urbanisme → dépôt du permis → <b>instruction</b> → permis délivré → travaux → conformité → achèvement",
+  piece:"Titre de propriété ou concession, plans, notice descriptive, permis, procès-verbaux de chantier."},
+ 'Crédit et financement':{
+  comp:["Le type de concours : investissement, équipement, trésorerie, crédit-bail.",
+        "Les garanties exigées : hypothèque, nantissement, caution.",
+        "Le plan de financement et la capacité de remboursement.",
+        "Les conditions de déblocage et d'amortissement."],
+  cas:["Garantie insuffisante ou non mobilisable.",
+       "Plan de financement incohérent avec le montant du projet.",
+       "Délai d'inscription de la garantie retardant le chantier.",
+       "Coût du crédit-bail supérieur à l'achat financé."],
+  circ:"BESOIN → type de concours → <b>dossier bancaire</b> → garanties → accord de crédit → inscription de la garantie → déblocage → remboursement",
+  piece:"Plan de financement, états financiers, titre de propriété ou concession, devis, accord de principe."},
+ 'Fiscalité':{
+  comp:["Les impôts applicables à l'activité et à sa forme juridique.",
+        "Les avantages liés au régime d'investissement.",
+        "Les obligations déclaratives périodiques.",
+        "Les droits d'enregistrement et de timbre sur les actes."],
+  cas:["Avantage revendiqué sans base déclarative correspondante.",
+       "Franchise de TVA sollicitée hors liste visée.",
+       "Contrôle fiscal portant sur une période antérieure.",
+       "Régime différent selon le statut résident ou non-résident."],
+  circ:"ACTIVITÉ → forme juridique → régime fiscal → <b>avantages applicables</b> → obligations déclaratives → contrôle éventuel → contentieux",
+  piece:"Numéro d'identification fiscale, déclarations, attestation d'enregistrement, extrait de rôle."},
+ 'Marchés publics':{
+  comp:["Le mode de passation : appel d'offres, consultation, gré à gré.",
+        "Le cahier des charges et ses composantes administratives et techniques.",
+        "L'offre : dossier de candidature, offre technique, offre financière.",
+        "Les suites : attribution, notification, ordre de service, réception."],
+  cas:["Offre écartée pour dossier incomplet.",
+       "Contestation de l'attribution.",
+       "Travaux supplémentaires sans avenant régulier.",
+       "Pénalités de retard contestées.",
+       "Réception refusée ou assortie de réserves."],
+  circ:"BESOIN PUBLIC → cahier des charges → publication → <b>soumission</b> → évaluation → attribution → notification → ordre de service → exécution → réception → règlement financier",
+  piece:"Cahier des charges, dossier de candidature, offres technique et financière, lettre de soumission, cautions."},
+ 'Création et vie de l\u2019entreprise':{
+  comp:["La forme sociale et ses conséquences sur le capital et la gouvernance.",
+        "Les statuts et le pacte d'associés éventuel.",
+        "L'immatriculation au registre du commerce.",
+        "Les événements de la vie sociale : cession, augmentation de capital, transformation, dissolution."],
+  cas:["Forme juridique inadaptée au projet ou au partenariat visé.",
+       "Objet social trop étroit pour l'activité réelle.",
+       "Répartition du capital non sécurisée entre associés.",
+       "Délai d'immatriculation retardant les démarches suivantes."],
+  circ:"PROJET → forme juridique → statuts → capital → <b>dépôt et immatriculation</b> → publication → identifiants fiscaux → vie sociale",
+  piece:"Projet de statuts, justificatif de capital, pièces d'identité des associés, justificatif de siège."},
+ 'Commerce extérieur':{
+  comp:["Le régime d'importation applicable au produit.",
+        "La classification tarifaire et les droits correspondants.",
+        "La domiciliation bancaire de l'opération.",
+        "Les autorisations préalables éventuelles."],
+  cas:["Produit soumis à autorisation non obtenue.",
+       "Classification tarifaire contestée à l'arrivée.",
+       "Domiciliation incomplète bloquant le paiement.",
+       "Équipements hors liste visée, perdant la franchise."],
+  circ:"FOURNISSEUR → contrat → facture → <b>domiciliation bancaire</b> → transport → douane → contrôle → dédouanement → paiement → justificatifs → comptabilité",
+  piece:"Facture proforma, contrat fournisseur, documents de transport, déclaration en douane, justificatifs bancaires."},
+ 'Change et transferts':{
+  comp:["La nature de l'opération : apport en capital, paiement d'importation, transfert de revenus.",
+        "Les justificatifs exigés à l'appui de chaque opération.",
+        "Les obligations déclaratives auprès des autorités compétentes.",
+        "Les conditions de transfert des dividendes et du produit de cession."],
+  cas:["Apport en devises non tracé, compromettant le transfert ultérieur.",
+       "Justificatif manquant bloquant une opération.",
+       "Transfert de revenus demandé sans base déclarative antérieure."],
+  circ:"OPÉRATION → qualification → <b>banque domiciliataire</b> → justificatifs → exécution → déclaration → conservation des preuves → transfert ultérieur",
+  piece:"Justificatifs d'apport, factures, contrats, attestations bancaires, déclarations."},
+ 'Banque':{
+  comp:["Le compte et sa domiciliation.",
+        "Les instruments de paiement international.",
+        "Les garanties et cautions bancaires.",
+        "Les obligations de conformité."],
+  cas:["Ouverture de compte conditionnée à des pièces non réunies.",
+       "Crédit documentaire mal adossé au contrat commercial.",
+       "Caution appelée sur un marché en litige."],
+  circ:"BESOIN → ouverture de compte → domiciliation → <b>instrument de paiement</b> → garanties → exécution → justificatifs",
+  piece:"Statuts, registre du commerce, identifiants fiscaux, contrats commerciaux."},
+ 'Assurance et risques':{
+  comp:["Les couvertures obligatoires selon l'activité et l'ouvrage.",
+        "Les couvertures facultatives adaptées au risque réel.",
+        "Les déclarations de sinistre et les délais.",
+        "Les recours et la subrogation de l'assureur."],
+  cas:["Ouvrage réceptionné sans couverture décennale.",
+       "Sinistre déclaré hors délai.",
+       "Exclusion de garantie découverte au moment du sinistre.",
+       "Recours de l'assureur contre un intervenant du chantier."],
+  circ:"ACTIVITÉ → risques identifiés → <b>polices souscrites</b> → sinistre → déclaration → expertise → indemnisation → recours éventuel",
+  piece:"Polices, attestations, déclarations de sinistre, rapports d'expertise."},
+ 'HSE':{
+  comp:["Les obligations de sécurité sur le site et le chantier.",
+        "Les études d'impact et les autorisations environnementales.",
+        "Le régime des installations classées.",
+        "Les registres et plans de prévention."],
+  cas:["Accident du travail engageant plusieurs responsabilités.",
+       "Installation exploitée sans autorisation requise.",
+       "Registres de sécurité non tenus, fragilisant la défense en cas d'incident.",
+       "Rejet ou déchet non conforme constaté lors d'un contrôle."],
+  circ:"ACTIVITÉ → classement de l'installation → <b>autorisations</b> → plans de prévention → registres → contrôles → incident éventuel → responsabilités administrative, civile et pénale",
+  piece:"Étude d'impact, autorisation d'exploitation, plans de prévention, registres, constats."},
+ 'Travail et ressources humaines':{
+  comp:["Les formes de contrat de travail et leurs conditions.",
+        "Les obligations de déclaration et de cotisation.",
+        "Les règles de rupture et leurs conséquences.",
+        "Le régime de la main-d'œuvre étrangère."],
+  cas:["Recours à la sous-traitance requalifié.",
+       "Rupture contestée devant la juridiction sociale.",
+       "Accident du travail et obligations de l'employeur.",
+       "Emploi de personnel étranger sans autorisation."],
+  circ:"BESOIN → forme de contrat → <b>déclaration</b> → cotisations → exécution → modification ou rupture → contentieux éventuel",
+  piece:"Contrats de travail, déclarations sociales, registres du personnel, autorisations de travail."},
+ 'Industrie et implantation':{
+  comp:["La nature de l'opération : création, extension, modernisation.",
+        "Le classement de l'installation et les autorisations associées.",
+        "Les raccordements énergie, eau et assainissement.",
+        "Les normes de production applicables."],
+  cas:["Installation classée exploitée sans autorisation.",
+       "Raccordements non disponibles sur le site retenu.",
+       "Équipements importés hors liste visée.",
+       "Extension nécessitant une nouvelle autorisation."],
+  circ:"PROJET INDUSTRIEL → site → <b>classement</b> → autorisations → raccordements → équipements → construction → mise en service → exploitation",
+  piece:"Dossier technique, étude d'impact, autorisations, contrats de raccordement."},
+ 'International Investor Gateway':{
+  comp:["La structure d'entrée : société, filiale, succursale, prise de participation, joint-venture.",
+        "L'intégration du capital étranger et ses justificatifs.",
+        "Le partenaire algérien et la forme du partenariat.",
+        "Les obligations permanentes après implantation."],
+  cas:["Structure d'entrée inadaptée à l'activité visée.",
+       "Apport en capital mal tracé, compromettant les transferts futurs.",
+       "Partenariat engagé sans pacte d'associés.",
+       "Importations d'équipements non rattachées au projet enregistré."],
+  circ:"PAYS D'ORIGINE → profil → secteur → projet → <b>partenaire algérien</b> → structure juridique → capital → financement → foncier → autorisations → importation → douane → banque → change → fiscalité → contrats → construction → exploitation → obligations permanentes",
+  piece:"Statuts de la société d'origine, justificatif d'apport, projet d'accord de partenariat, description du projet."},
+ 'Base documentaire juridique':{
+  comp:["Les textes de rang supérieur, lois et ordonnances.",
+        "Les décrets et arrêtés d'application.",
+        "Les textes modificatifs et abrogés.",
+        "Le versionnage : quelle règle était applicable à quelle date."],
+  cas:["Texte d'application annoncé mais non publié.",
+       "Régime transitoire maintenant en vigueur d'anciens textes.",
+       "Opération ancienne examinée au regard du droit actuel, à tort."],
+  circ:"QUESTION → domaine → texte pivot → article → <b>version applicable à la date</b> → textes modificatifs → texte d'application → statut de fiabilité",
+  piece:"Références de publication, textes consolidés, dates d'entrée en vigueur."},
+ 'Génération documentaire':{
+  comp:["Les modèles types par famille de contrat et de procédure.",
+        "Les clauses à adapter au régime applicable.",
+        "Les pièces annexes à constituer.",
+        "Le contrôle de cohérence entre pièces."],
+  cas:["Modèle appliqué sans vérification du régime applicable.",
+       "Clause manquante identifiée après signature.",
+       "Annexe visée au contrat mais jamais produite."],
+  circ:"BESOIN → modèle type → <b>adaptation au régime applicable</b> → personnalisation → annexes → contrôle de cohérence → signature",
+  piece:"Modèle retenu, données du dossier, annexes visées."}
+};
+
+function axisBlock(name){
+  const a=AXES[name];
+  if(!a) return `<div class="axis"><h5>${name}</h5><p>Notice de fond non encore rédigée pour cet axe.</p></div>`;
+  return `<div class="axis">
+    <h5>${name}</h5>
+    <p class="sub">Composition du domaine</p><ul>${a.comp.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <p class="sub">Situations fréquemment rencontrées</p><ul>${a.cas.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <p class="sub">Circuit</p><div class="circuit">${a.circ}</div>
+    <p class="sub">Pièces habituellement mobilisées</p><p>${a.piece}</p>
+  </div>`;
+}
+
+document.getElementById('freeGo').addEventListener('click',()=>{
+  const v=profilSel.value;
+  const picked=[...document.querySelectorAll('#needs input:checked')].map(i=>i.value);
+  const err=document.getElementById('freeErr');
+  if(!v||!picked.length){err.dataset.on=1;return;} err.dataset.on=0;
+  const label=profilSel.options[profilSel.selectedIndex].text;
+  const axes=[...new Set(picked)];
+  const intl=['societeEtrangere','consultantEtranger','diaspora','conseilFDI'].includes(v);
+  document.getElementById('freeBody').innerHTML=`
+    <div class="seg"><h4>Profil déclaré</h4><p>${label}.</p></div>
+    <div class="seg"><h4>Domaines réglementaires concernés</h4><p>${axes.join(' · ')}.</p></div>
+    <div class="seg"><h4>Première orientation</h4><p>${intl
+      ? "Le parcours investisseur étranger s'applique : structure d'entrée, intégration du capital et partenaire algérien restent à préciser."
+      : "Un enregistrement ou une mise à jour auprès de l'AAPI constituerait probablement la première étape."}</p></div>
+    <div class="seg"><h4>Notice par domaine</h4>
+      <p>Présentation générale de chaque domaine retenu : composition, situations fréquentes et circuit. Le palier Essential applique cette logique à votre situation déclarée ; Pro la confronte à vos pièces.</p>
+      ${axes.map(axisBlock).join('')}
+    </div>
+    <div class="seg"><h4>Documents probablement nécessaires</h4><p>Pièce d'identité ou statuts, justificatif de capital, description du projet${axes.includes('Gestion contractuelle')||axes.includes('Contentieux et litiges')?", contrat et pièces d'exécution":''}.</p></div>
+    <p class="nextstep">Pour un diagnostic des obligations et des risques appliqué à votre situation, passez au palier Essential. Si vous disposez déjà de pièces à faire analyser, passez à Pro.</p>`;
+  document.getElementById('freeOut').dataset.on=1;
+});
+
+/* ============ ASSISTANT ============ */
+const OK='<span class="badge b-ok">vérifié</span>';
+const TR='<span class="badge b-tr">transitoire</span>';
+const NO='<span class="badge b-no">non identifié</span>';
+
+const CONTACT='<a href="https://wa.me/213555372345" target="_blank" rel="noopener">WhatsApp +213 555 37 23 45</a> · <a href="mailto:men-ay_pro-managment@outlook.fr">men-ay_pro-managment@outlook.fr</a>';
+const RESERVE=pal=>"Réponse réservée aux abonnés du palier "+pal+".";
+
+const QA={
+ free:[
+  {q:"Par où commencer si rien n'est encore engagé ?",
+   f:"Trois choses se décident avant tout dépôt : la forme juridique qui portera le projet, le régime d'investissement visé, et la façon dont le foncier sera obtenu. Elles se conditionnent mutuellement — une forme juridique choisie trop tôt peut fermer une option de partenariat.",
+   t:"Loi n° 22-18 relative à l'investissement "+OK+" · Droit des sociétés "+OK,
+   r:"Engager des frais de constitution avant d'avoir arrêté le régime visé, et devoir modifier les statuts ensuite.",
+   a:"Qualifier le projet (montant, secteur, partenaires) avant toute démarche, puis passer au palier Essential pour le diagnostic de l'axe prioritaire."},
+  {q:"Quelle différence entre régime général et investissements structurants ?",
+   f:"Le régime des investissements structurants correspond à un seuil de montant, au-delà duquel le dossier relève d'un traitement et d'un niveau de décision différents de ceux du régime général.",
+   t:"Loi n° 22-18 — seuil de 10 milliards de dinars (DZD) "+OK+" · Décret exécutif n° 22-299 "+OK,
+   r:"Revendiquer un régime sans en remplir les conditions, ce qui fait perdre le bénéfice des avantages au moment du contrôle.",
+   a:"Chiffrer précisément l'investissement avant de choisir le régime. Le palier Essential trace la branche selon le montant réel."},
+  {q:"Quels documents préparer avant un premier rendez-vous ?",
+   f:"Le socle commun à presque tous les dossiers : identité ou statuts, justificatif de capital, description écrite du projet, et le cas échéant l'accord de principe du partenaire.",
+   t:"Exigences documentaires par procédure "+OK+" · Pièces complémentaires selon le secteur "+TR,
+   r:"Se présenter avec un dossier incomplet, ce qui décale le traitement sans que le délai réglementaire ait commencé à courir.",
+   a:"Réunir les pièces du socle, puis déposer le dossier au palier Pro pour en vérifier la cohérence avant démarche."}]
+};
+
+const qlist=document.getElementById('qlist');
+function renderAssist(id){
+  document.getElementById('assistScope').textContent='Palier '+PALIERS.find(p=>p.id===id).name;
+  document.getElementById('answer').dataset.on=0;
+  document.getElementById('askMsg').dataset.on=0;
+  if(id!=='free'){ qlist.innerHTML=`<p class="assist-lede" style="margin:0">Les questions de ce palier sont réservées. Contact : ${CONTACT}</p>`; return; }
+  qlist.innerHTML=(QA[id]||[]).map((x,i)=>`<button type="button" data-i="${i}">${x.q}</button>`).join('');
+}
+qlist.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-i]'); if(!b)return;
+  const cur='free';
+  const a=QA[cur][+b.dataset.i];
+  document.getElementById('aQ').textContent=a.q;
+  document.getElementById('aF').textContent=a.f;
+  document.getElementById('aT').innerHTML=a.t;
+  document.getElementById('aR').textContent=a.r;
+  document.getElementById('aA').innerHTML=a.a;
+  const fields=document.querySelectorAll('#answer .afield');
+  const locked=cur!=='free';
+  fields[1].style.display=locked?'none':'';
+  fields[2].style.display=locked?'none':'';
+  document.querySelector('#answer .row').style.display=locked?'none':'';
+  document.getElementById('answer').dataset.on=1;
+});
+document.getElementById('askGo').addEventListener('click',()=>{
+  document.getElementById('askMsg').dataset.on=1;
+});
+document.getElementById('askIn').addEventListener('keydown',e=>{
+  if(e.key==='Enter') document.getElementById('askMsg').dataset.on=1;
+});
+renderAssist('free');
+</script>
+</body>
+</html>
